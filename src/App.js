@@ -1,38 +1,24 @@
 import './App.css';
+import {useDispatch} from 'react-redux';
+import {addTodo} from './store/todoSlice'
 import { useState } from 'react';
+import TodoList from './components/TodoList';
+import InputField from './components/InputField';
 
 function App() {
-  const [todos, setTodos] = useState([])
   const [text, setText] = useState('')
+  const dispatch = useDispatch()
 
-  const addTodo = () => {
-    if (text.trim().length) {
-      setTodos([
-        ...todos,
-        {
-          id: new Date().toISOString(),
-          text,
-          completed: false
-        }
-      ])
-      setText('')
-    }
+
+  const addTask = () => {
+    dispatch(addTodo({text}))
+    setText('')
   }
 
   return (
     <div className="App">
-      <label>
-        <input value={text} onChange={(e) => setText(e.target.value)}></input>
-        <button onClick={addTodo}>Add to do</button>
-      </label>
-
-      <ul className='todo-list'>
-        {todos.map(todo => <li key={todo.id}>
-          <input type="checkbox" />
-          <span>{todo.text}</span>
-          <span>&times;</span>
-        </li>)}
-      </ul>
+      <InputField text={text} handleInput={setText} handleSubmit={addTask}/>
+      <TodoList />
     </div>
   );
 }
